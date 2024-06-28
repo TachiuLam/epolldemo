@@ -1,1 +1,5 @@
 # epolldemo
+simple_ws 处理一个ws连接的读或写时，都需要创建一个goroutine去handler，避免该连接的读写互相阻塞。但当ws连接数量增多后，会有很多goroutine创建，切大部分可能是waiting状态，并占用一块内存区域。
+
+## epoll
+ws连接创建时，不一定每时每刻都会在socket里产生数据的读写，因此可以利用linux 内核epoll的机制，当socket中写入数据时，再通过事件唤醒全局的Start goroutine去处理socket里的数据
